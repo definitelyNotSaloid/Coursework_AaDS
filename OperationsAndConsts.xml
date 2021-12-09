@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ValueProviders>
+  
+  <OperationClass>
+    <type>Binary</type>
+    <syntax>+</syntax>
+    <worker class="OperationWorker_Addition" />
+    <priority>2</priority>
+  </OperationClass>
+
+  <OperationClass>
+    <type>Binary</type>
+    <syntax>-</syntax>
+    <worker class="OperationWorker_Substraction" />
+    <priority>2</priority>
+  </OperationClass>
+  
+  <OperationClass>
+    <type>Binary</type>
+    <syntax>*</syntax>
+    <worker class="OperationWorker_Multiplication" />
+    <priority>10</priority>
+  </OperationClass>
+  <OperationClass>
+    
+    <type>Binary</type>
+    <syntax>/</syntax>
+    <worker class="OperationWorker_Division" />
+    <priority>10</priority>
+  </OperationClass>
+  
+</ValueProviders>
