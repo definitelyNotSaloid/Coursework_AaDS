@@ -18,7 +18,7 @@ namespace Coursework_AaDS
     public interface IValueProvider
     {
         public IValueProvider Parent { get; set; }
-        public IEnumerable<IValueProvider> GetSubValueProviders();
+        
         public double GetValue();
         public bool IsInited();           // does NOT guarantees value can be received. Only ensures args are inited
     }
@@ -66,6 +66,7 @@ namespace Coursework_AaDS
                 case OperationType.None:
                     throw new Exception("tried to get result of none-type operation");
                 case OperationType.UnaryPrefix:
+                case OperationType.UnaryPostfix:
                     return worker.Calculate(new double[] { Arg1.GetValue() });
                 case OperationType.Binary:
                     return worker.Calculate(new double[] { Arg1.GetValue(), Arg2.GetValue() });
@@ -76,8 +77,9 @@ namespace Coursework_AaDS
 
         public IEnumerable<IValueProvider> GetSubValueProviders()
         {
-            foreach (var val in _arguments)
-                yield return val;
+            yield return Arg1;
+            if (worker.Type == OperationType.Binary)
+                yield return Arg2;
         }
 
         public bool IsInited()
@@ -131,11 +133,6 @@ namespace Coursework_AaDS
         }
 
         public double GetValue() => _value;
-
-        public IEnumerable<IValueProvider> GetSubValueProviders()
-        {
-            yield break;
-        }
 
         public bool IsInited() => true;
     }

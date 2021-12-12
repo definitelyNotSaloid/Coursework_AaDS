@@ -28,14 +28,12 @@ namespace Coursework_AaDS
             {
                 if (node.Name == "OperationClass")
                 {
-                    OperationType type=OperationType.None;
+                    OperationType type = OperationType.None;
                     string syntax = null;
                     int priority = -1;
                     Type workerClass = null;
                     foreach (XmlNode childNode in node.ChildNodes)
                     {
-
-
                         // --------SYNTAX---------
 
                         if (childNode.Name == "syntax")
@@ -90,14 +88,55 @@ namespace Coursework_AaDS
                         }
                     }
 
+
                     yield return (OperationWorker)workerClass
-                        .GetConstructor(new Type[] 
+                        .GetConstructor(new Type[]
                             { typeof(string), typeof(int), typeof(OperationType)})
-                        .Invoke(new object[]{ syntax, priority, type });
-
-
+                        .Invoke(new object[] { syntax, priority, type });
                 }
+            }
+        }
 
+
+        public static IEnumerable<ConstValue> GetConstValues()
+        {
+            XmlDocument document = new XmlDocument();
+            document.Load("OperationsAndConsts.xml");
+            XmlElement xRoot = document.DocumentElement;
+
+            List<Type> workers = Assembly.GetExecutingAssembly().GetTypes()
+                .Where((Type type) =>
+                    type.IsSubclassOf(typeof(OperationWorker)) &&
+                    !type.IsAbstract)
+                .ToList();
+
+
+            foreach (XmlNode node in xRoot)
+            {
+                if (node.Name == "ConstValue")
+                {
+                    string name = null;
+                    double value = 0;
+
+                    foreach (XmlNode childNode in node.ChildNodes)
+                    {
+                        // ---------NAME---------
+
+                        if (childNode.Name == "name")
+                        {
+                            name = childNode.InnerText;
+                        }
+
+                        // ----------VALUE--------
+
+                        else if (childNode.Name == "value")
+                        {
+                            value = Convert.ToDouble(childNode.InnerText);
+                        }
+                    }
+
+                    yield return new ConstValue(value, name);
+                }
             }
         }
     }

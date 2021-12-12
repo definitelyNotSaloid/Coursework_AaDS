@@ -20,8 +20,24 @@ namespace Coursework_AaDS
                 var formula = Console.ReadLine();
                 if (formula == "esc") 
                     break;
-                var res = FormulaParsingUtility.GetRootValueProvider(formula);
-                Console.WriteLine(res.GetValue());
+                try
+                {
+                    IValueProvider res = FormulaParser.GetRootValueProvider(formula);
+                    Console.WriteLine(res.GetValue());
+                    if (res is Operation operation)
+                        Console.WriteLine(FormulaParser.ToPrefixFormat(operation));
+                    else
+                        Console.WriteLine(res.GetValue());
+                }
+                catch(FormatException ex)
+                {
+                    Console.WriteLine("Formula format error: " + ex.Message);
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine("runtime error: " + ex.Message);
+                }
             }
             
         }

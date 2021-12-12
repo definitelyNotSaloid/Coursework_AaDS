@@ -21,12 +21,80 @@
     <worker class="OperationWorker_Multiplication" />
     <priority>10</priority>
   </OperationClass>
+  
   <OperationClass>
-    
     <type>Binary</type>
     <syntax>/</syntax>
     <worker class="OperationWorker_Division" />
     <priority>10</priority>
   </OperationClass>
+
+  <OperationClass>
+    <type>Binary</type>
+    <syntax>^</syntax>
+    <worker class="OperationWorker_Power" />
+    <priority>100</priority>
+  </OperationClass>
+  
+  
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>ln</syntax>
+    <worker class="OperationWorker_NatLogarithm" />
+    <priority>10010</priority>
+  </OperationClass>
+  
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>lg</syntax>
+    <worker class="OperationWorker_DecimalLogarithm" />
+    <priority>10010</priority>
+  </OperationClass>
+
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>sin</syntax>
+    <worker class="OperationWorker_Sin" />
+    <priority>10010</priority>
+  </OperationClass>
+
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>cos</syntax>
+    <worker class="OperationWorker_Cos" />
+    <priority>10010</priority>
+  </OperationClass>
+
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>tg</syntax>
+    <worker class="OperationWorker_Tangent" />
+    <priority>10010</priority>
+  </OperationClass>
+
+  <OperationClass>
+    <type>UnaryPrefix</type>
+    <syntax>ctg</syntax>
+    <worker class="OperationWorker_Cotangent" />
+    <priority>10010</priority>
+  </OperationClass>
+  
+  <OperationClass>
+    <type>UnaryPostfix</type>
+    <syntax>!</syntax>
+    <worker class="OperationWorker_Factorial" />
+    <priority>10100</priority>
+  </OperationClass>
+
+
+  <ConstValue>
+    <name>e</name>
+    <value>2,718281828459045</value>
+  </ConstValue>
+
+  <ConstValue>
+    <name>pi</name>
+    <value>3,141592653589793</value>
+  </ConstValue>
   
 </ValueProviders>

@@ -6,27 +6,28 @@ namespace Coursework_AaDS
 {
     public static class StringUtility
     {
-        public static string GetFirstWord(this string str, int startingIndex=0, char[] separators = null)
+        public static string GetFirstWord(this string str, int startingIndex=0, char[] letters = null, bool excludingLettersMode = true)
         {
-            if (separators == null)
-                separators = new char[] { ' ' };
+            if (excludingLettersMode && letters == null)
+                letters = new char[] { ' ' };
 
             int firstNonSeparatorIndex = -1;
             for (int i=startingIndex;i<str.Length;i++)
             {
                 bool isSeparator = false;
-                foreach(var sep in separators)
+                foreach(var letter in letters)
                 {
-                    if (str[i]==sep)
+                    if (str[i]==letter)
                     {
-                        isSeparator = true;
+                        isSeparator = excludingLettersMode;
                         break;
                     }    
                 }
 
                 if (!isSeparator)
                 {
-                    firstNonSeparatorIndex = i;
+                    if (firstNonSeparatorIndex == -1)
+                        firstNonSeparatorIndex = i;
                 }
                 else
                 {
@@ -42,16 +43,17 @@ namespace Coursework_AaDS
             return "";
         }
 
-        public static int GetFirstWordIndex(this string str, int startingIndex = 0, char[] separators = null)
+
+        public static int GetFirstWordIndex(this string str, int startingIndex = 0, char[] letters = null, bool excludingLettersMode = true)
         {
-            if (separators == null)
-                separators = new char[] { ' ' };
+            if (excludingLettersMode && letters == null)
+                letters = new char[] { ' ' };
 
             for (int i=startingIndex;i<str.Length;i++)
             {
-                foreach (var sep in separators)
+                foreach (var letter in letters)
                 {
-                    if (str[i] != sep)
+                    if (str[i] == letter ^ excludingLettersMode)            //return if excludingMode-and-thisIsNotASeparator or if includingMode-and-thisIsALetter
                         return i;
                 }    
             }
@@ -59,17 +61,17 @@ namespace Coursework_AaDS
             return -1;
         }
 
-        public static int FirstCharIndexAfterWord(this string str, int startinIndex=0, char[] separators=null)
+        public static int FirstCharIndexAfterWord(this string str, int startinIndex=0, char[] letters=null, bool excludingLettersMode = true)
         {
-            if (separators == null)
-                separators = new char[] { ' ' };
+            if (excludingLettersMode && letters == null)
+                letters = new char[] { ' ' };
 
             bool nonSeparatorMet = false;
             for (int i = startinIndex; i < str.Length; i++)
             {
-                foreach (var sep in separators)
+                foreach (var letter in letters)
                 {
-                    if (str[i] == sep)
+                    if (str[i] != letter ^ excludingLettersMode)            //return excludingMode-and-thisIsNotASeparator or if includingMode-and-thisIsALetter
                     {
                         if (nonSeparatorMet)
                             return i;
@@ -126,7 +128,7 @@ namespace Coursework_AaDS
             {
                 return new ConstValue(Convert.ToDouble(str));
             }
-            catch (FormatException ex)
+            catch (FormatException)
             {
                 foreach (var cnst in GlobalData.constValues)
                 {
@@ -136,6 +138,7 @@ namespace Coursework_AaDS
                 return null;
             }
         }
+
     }
 
     
