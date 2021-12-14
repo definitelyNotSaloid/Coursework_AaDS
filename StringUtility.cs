@@ -6,85 +6,56 @@ namespace Coursework_AaDS
 {
     public static class StringUtility
     {
-        public static string GetFirstWord(this string str, int startingIndex=0, char[] letters = null, bool excludingLettersMode = true)
+        public static Pair<int,int> GetFirstWordSubstr(this string str, int startingIndex=0)            //returns first pack of chars separated with spaces or just one bracket (ie string "do a (barrel roll)" contains words do,a,(,barrel,roll,) )
         {
-            if (excludingLettersMode && letters == null)
-                letters = new char[] { ' ' };
+            Pair<int, int> pair;
 
             int firstNonSeparatorIndex = -1;
+            if (startingIndex < 0 || startingIndex >= str.Length)
+                throw new ArgumentOutOfRangeException("statring index is out of range");
+
+            
             for (int i=startingIndex;i<str.Length;i++)
             {
-                bool isSeparator = false;
-                foreach(var letter in letters)
-                {
-                    if (str[i]==letter)
-                    {
-                        isSeparator = excludingLettersMode;
-                        break;
-                    }    
-                }
-
-                if (!isSeparator)
+                if (str[i] != ' ')
                 {
                     if (firstNonSeparatorIndex == -1)
+                    {
+                        if (str[i]=='(')        // brackets are separate words. noone is willing to write 5 + ( 5 + 5 ) instead of 5 + (5 + 5)
+                        {
+                            pair.first = i;
+                            pair.second = 1;
+                            return pair;    
+                        }
+
                         firstNonSeparatorIndex = i;
+
+                    }
                 }
                 else
                 {
+
                     if (firstNonSeparatorIndex != -1)
-                        return str.Substring(firstNonSeparatorIndex, i - firstNonSeparatorIndex);
+                    {
+                        pair.first = firstNonSeparatorIndex;
+                        pair.second = i - firstNonSeparatorIndex;
+                        return pair;
+                    }
 
                 }
             }
 
             if (firstNonSeparatorIndex != -1)
-                return str.Substring(firstNonSeparatorIndex, str.Length - firstNonSeparatorIndex);
-
-            return "";
-        }
-
-
-        public static int GetFirstWordIndex(this string str, int startingIndex = 0, char[] letters = null, bool excludingLettersMode = true)
-        {
-            if (excludingLettersMode && letters == null)
-                letters = new char[] { ' ' };
-
-            for (int i=startingIndex;i<str.Length;i++)
             {
-                foreach (var letter in letters)
-                {
-                    if (str[i] == letter ^ excludingLettersMode)            //return if excludingMode-and-thisIsNotASeparator or if includingMode-and-thisIsALetter
-                        return i;
-                }    
+                pair.first = firstNonSeparatorIndex;
+                pair.second = str.Length - firstNonSeparatorIndex;
+                return pair;
             }
 
-            return -1;
-        }
+            pair.first = -1;
+            pair.second = 0;
 
-        public static int FirstCharIndexAfterWord(this string str, int startinIndex=0, char[] letters=null, bool excludingLettersMode = true)
-        {
-            if (excludingLettersMode && letters == null)
-                letters = new char[] { ' ' };
-
-            bool nonSeparatorMet = false;
-            for (int i = startinIndex; i < str.Length; i++)
-            {
-                foreach (var letter in letters)
-                {
-                    if (str[i] != letter ^ excludingLettersMode)            //return excludingMode-and-thisIsNotASeparator or if includingMode-and-thisIsALetter
-                    {
-                        if (nonSeparatorMet)
-                            return i;
-
-                        break;
-                    }
-                    else
-                        nonSeparatorMet = true;
-                }
-            }
-
-            return -1;
-
+            return pair;
         }
 
         public static int FindEnclosingBracketIndex(this string str, int openingBracketIndex=0)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Lab1_AaDS;
+using System.Diagnostics;
 
 namespace Coursework_AaDS
 {
@@ -15,17 +16,19 @@ namespace Coursework_AaDS
             int index1 = 0;
             int valuesCalculated = 0;                  //used to check if operations and args placed correctly
             string word="";
+            Pair<int, int> wordSubstr;
 
             while (index1!=-1 && index1<formula.Length)
             {
-                word = formula.GetFirstWord(startingIndex: index1);
-
-                if (word == "")
+                wordSubstr = formula.GetFirstWordSubstr(index1);
+                if (wordSubstr.first == -1)
                     break;
+
+                word = formula.Substring(wordSubstr.first, wordSubstr.second);
 
                 if (word == "(")
                 {
-                    int bracketIndex = formula.GetFirstWordIndex(startingIndex: index1);
+                    int bracketIndex = wordSubstr.first;
                     int enclosingBracketIndex = formula.FindEnclosingBracketIndex(bracketIndex);
                     if (enclosingBracketIndex == -1)
                         throw new FormatException("Some brackets aren't closed");
@@ -43,7 +46,7 @@ namespace Coursework_AaDS
 
                 else
                 {
-                    IValueProvider value = word.AsConstValue();         //can throw exeptions
+                    IValueProvider value = word.AsConstValue();         
 
                     if (value == null)
                     {
@@ -79,7 +82,7 @@ namespace Coursework_AaDS
                         formulaInitedValues.PushBack(value);
                     }
 
-                    index1 = formula.FirstCharIndexAfterWord(index1);
+                    index1 = wordSubstr.first+wordSubstr.second;
                 }
             }
 
@@ -89,17 +92,18 @@ namespace Coursework_AaDS
             else if (valuesCalculated < 1)
                 throw new FormatException("expected a value after <" + word + ">");
 
-
-
-            // Following piece isnt optimized, TODO
+            
 
             while (!formulaOperations.Empty)
             {
+                var initedValsEnumerator = formulaInitedValues.GetEnumerator() as NotAListEnumerator<IValueProvider>;           //used to avoid too much indexation
+
                 var highestPriorityOp = formulaOperations[0];
                 bool highestPriorityOpIsUnary = highestPriorityOp.OperationType != OperationType.Binary;
                 int highestPriorityOpIndex = 0;
-                int firstArgIndex = 0;
                 int highestPriorityOpFirstArgIndex = 0;
+
+                int firstArgIndex = 0;
                 int index2 = 0;
 
                 foreach(var op in formulaOperations)
@@ -131,39 +135,47 @@ namespace Coursework_AaDS
                     index2++;
                 }
 
-                //TODO avoid too much indexation calls
-                highestPriorityOp.Arg1 = formulaInitedValues[highestPriorityOpFirstArgIndex];
+                for (int i = 0; i <= highestPriorityOpFirstArgIndex; i++)
+                    initedValsEnumerator.MoveNext();
+
+                highestPriorityOp.Arg1 = (IValueProvider)initedValsEnumerator.Current;
+
+                initedValsEnumerator.Current = highestPriorityOp;
+
                 if (highestPriorityOp.OperationType == OperationType.Binary)
                 {
-                    highestPriorityOp.Arg2 = formulaInitedValues[highestPriorityOpFirstArgIndex + 1];
-                    formulaInitedValues.RemoveAt(highestPriorityOpFirstArgIndex + 1);
+                    initedValsEnumerator++;
+                    highestPriorityOp.Arg2 = (IValueProvider)initedValsEnumerator.Current;
+                    formulaInitedValues.RemoveAt(initedValsEnumerator);
                 }
-                formulaInitedValues[highestPriorityOpFirstArgIndex] = highestPriorityOp;
+
                 formulaOperations.RemoveAt(highestPriorityOpIndex);
 
             }
 
             if (formulaInitedValues.Count != 1)
-                throw new Exception("argument expected");
+                throw new Exception("RUNTIME more or less then 1 value left after calculations");
 
             return formulaInitedValues[0];
         }
 
-        public static string ToPrefixFormat(Operation rootOperation)
+        public static IEnumerable<string> ToPrefixFormat(Operation rootOperation)
         {
-            string res = rootOperation.Syntax + " ";
+            yield return rootOperation.Syntax + " ";
             foreach (var val in rootOperation.GetSubValueProviders())
             {
                 if (val is Operation operation)
                 {
-                    res += ToPrefixFormat(operation) ;
+                    foreach (var val2 in ToPrefixFormat(operation))
+                    {
+                        yield return val2;
+                    }
                 }
 
                 else
-                    res += val.GetValue().ToString() + " ";
+                    yield return val.ToString() + " ";
             }
 
-            return res;
         }
     }
 }

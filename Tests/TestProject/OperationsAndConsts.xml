@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ValueProviders>
-  
+
   <!-- Classic -->
-  
+
   <OperationClass>
     <type>Binary</type>
     <syntax>+</syntax>
@@ -16,14 +16,14 @@
     <worker class="OperationWorker_Substraction" />
     <priority>2</priority>
   </OperationClass>
-  
+
   <OperationClass>
     <type>Binary</type>
     <syntax>*</syntax>
     <worker class="OperationWorker_Multiplication" />
     <priority>10</priority>
   </OperationClass>
-  
+
   <OperationClass>
     <type>Binary</type>
     <syntax>/</syntax>
@@ -37,16 +37,16 @@
     <worker class="OperationWorker_Power" />
     <priority>100</priority>
   </OperationClass>
-  
+
   <!-- exponential -->
-  
+
   <OperationClass>
     <type>UnaryPrefix</type>
     <syntax>ln</syntax>
     <worker class="OperationWorker_NatLogarithm" />
     <priority>10010</priority>
   </OperationClass>
-  
+
   <OperationClass>
     <type>UnaryPrefix</type>
     <syntax>lg</syntax>
@@ -55,7 +55,7 @@
   </OperationClass>
 
   <!-- Trigonometrical -->
-  
+
   <OperationClass>
     <type>UnaryPrefix</type>
     <syntax>sin</syntax>
@@ -76,23 +76,23 @@
     <worker class="OperationWorker_Tangent" />
     <priority>10010</priority>
   </OperationClass>
-  
+
   <OperationClass>
     <type>UnaryPrefix</type>
     <syntax>ctg</syntax>
     <worker class="OperationWorker_Cotangent" />
     <priority>10010</priority>
   </OperationClass>
-  
+
   <!-- Other -->
-  
+
   <OperationClass>
     <type>UnaryPostfix</type>
     <syntax>!</syntax>
     <worker class="OperationWorker_Factorial" />
     <priority>10100</priority>
   </OperationClass>
-  
+
   <!--Consts-->
 
   <ConstValue>
@@ -104,5 +104,5 @@
     <name>pi</name>
     <value>3,14159265358979323846</value>
   </ConstValue>
-  
+
 </ValueProviders>

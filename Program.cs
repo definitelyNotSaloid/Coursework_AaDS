@@ -22,12 +22,25 @@ namespace Coursework_AaDS
                     break;
                 try
                 {
-                    IValueProvider res = FormulaParser.GetRootValueProvider(formula);
+                    IValueProvider res=null;
+                    res = FormulaParser.GetRootValueProvider(formula);
+
+
                     Console.WriteLine(res.GetValue());
+
                     if (res is Operation operation)
-                        Console.WriteLine(FormulaParser.ToPrefixFormat(operation));
+                        foreach (var op in FormulaParser.ToPrefixFormat(operation))
+                            Console.Write(op);
+
                     else
-                        Console.WriteLine(res.GetValue());
+                        Console.Write(res.GetValue());
+
+
+
+                    Console.WriteLine();
+                    /*Console.WriteLine("Parse time = " + timeParse.ToString());
+                    Console.WriteLine("Calculation time = " + timeVal.ToString());
+                    Console.WriteLine("translating to prefix form time = " + timePrefix.ToString());*/
                 }
                 catch(FormatException ex)
                 {
@@ -43,3 +56,4 @@ namespace Coursework_AaDS
         }
     }
 }
+

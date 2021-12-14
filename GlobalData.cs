@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Lab1_AaDS;
 
 namespace Coursework_AaDS
 {
     public static class GlobalData
     {
-        public static List<OperationWorker> operationWorkers;
-        public static List<ConstValue> constValues;
-        public static char[] NumberAlphabet = new char[] {'0','1','2','3','4','5','6','7','8','9','.',',' };
+        public static NotAList<OperationWorker> operationWorkers;
+        public static NotAList<ConstValue> constValues;
 
         public static void Init()
         {
-            operationWorkers = new List<OperationWorker>();
-            constValues = new List<ConstValue>();
+            operationWorkers = new NotAList<OperationWorker>();
+            constValues = new NotAList<ConstValue>();
             foreach (var op in XmlParsingUtility.GetOperations())
                 operationWorkers.Add(op);
 

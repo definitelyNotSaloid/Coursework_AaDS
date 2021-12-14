@@ -82,6 +82,9 @@ namespace Coursework_AaDS
             if (arguments.Length != 2)
                 throw new ArgumentException("Can't divide more or less then two values");
 
+            if (arguments[1] == 0)
+                throw new DivideByZeroException();
+
             return arguments[0] / arguments[1];
         }
 
@@ -95,6 +98,9 @@ namespace Coursework_AaDS
         {
             if (arguments.Length != 1)
                 throw new ArgumentException("Can't find logarithm of more or less than 1 value");
+
+            if (arguments[0] <= 0)
+                throw new ArgumentException("logarithm cant receive non-positive number as arg");
 
             return Math.Log(arguments[0]);
         }
@@ -110,6 +116,9 @@ namespace Coursework_AaDS
             if (arguments.Length != 1)
                 throw new ArgumentException("Can't find logarithm of more or less than 1 value");
 
+            if (arguments[0] <= 0)
+                throw new ArgumentException("logarithm cant receive non-positive number as arg");
+
             return Math.Log10(arguments[0]);
         }
 
@@ -124,7 +133,14 @@ namespace Coursework_AaDS
             if (arguments.Length != 2)
                 throw new ArgumentException("Power operation cant receive more or less than 2 args");
 
-            return Math.Pow(arguments[0], arguments[1]);
+            double res = Math.Pow(arguments[0], arguments[1]);
+            if (double.IsNaN(res))
+                throw new ArgumentException("pow operation is not valid. Perhaps you entered negative number and non-int power");
+
+            if (double.IsInfinity(res))
+                throw new ArgumentException("pow operation returned inf");
+
+            return res;
         }
 
         public OperationWorker_Power(string syntax, int priority, OperationType type) : base(syntax, priority, type)
@@ -166,7 +182,11 @@ namespace Coursework_AaDS
             if (arguments.Length != 1)
                 throw new ArgumentException("tangent operation cant receive more or less than 1 arg");
 
-            return Math.Tan(arguments[0]);
+            double tan = Math.Tan(arguments[0]);
+            if (double.IsInfinity(tan))
+                throw new ArgumentException("tangent operation returned inf");
+
+            return tan;
         }
 
         public OperationWorker_Tangent(string syntax, int priority, OperationType type) : base(syntax, priority, type)
@@ -180,7 +200,11 @@ namespace Coursework_AaDS
             if (arguments.Length != 1)
                 throw new ArgumentException("cotangent operation cant receive more or less than 1 arg");
 
-            return 1/Math.Tan(arguments[0]);
+            double tan = Math.Tan(arguments[0]);
+            if (tan == 0)
+                throw new ArgumentException("cotangent operation returned inf");
+
+            return 1/tan;
         }
 
         public OperationWorker_Cotangent(string syntax, int priority, OperationType type) : base(syntax, priority, type)
@@ -193,6 +217,9 @@ namespace Coursework_AaDS
         {
             if (arguments.Length != 1)
                 throw new ArgumentException("square root operation cant receive more or less than 1 arg");
+
+            if (arguments[0] < 0)
+                throw new ArgumentException("cant take square root of negative value");
 
             return Math.Sqrt(arguments[0]);
         }
