@@ -95,11 +95,9 @@ namespace Coursework_AaDS
 
         public static ConstValue AsConstValue(this string str)
         {
-            try
-            {
-                return new ConstValue(Convert.ToDouble(str));
-            }
-            catch (FormatException)
+            double num = str.AsDouble();
+
+            if (double.IsNaN(num))
             {
                 foreach (var cnst in GlobalData.constValues)
                 {
@@ -108,6 +106,9 @@ namespace Coursework_AaDS
                 }
                 return null;
             }
+            else
+                return new ConstValue(num);
+            
         }
 
         public static bool IsEmptyOrSpacesOnly(this string str)
@@ -118,6 +119,59 @@ namespace Coursework_AaDS
 
             return true;
         }
+
+        
+        public static double AsDouble(this string str)
+        {
+            if (str.Length == 0)
+                return double.NaN;
+
+            bool isNegative = str[0] == '-';
+            if (isNegative && str.Length == 1)
+                return double.NaN;
+
+            bool dotMet = false;
+            
+            double res = 0.0;
+            int pow = -1;
+
+
+            for (int i=isNegative ? 1 : 0;i<str.Length; i++)
+            {
+                double digit = char.GetNumericValue(str[i]);
+                if (digit == -1.0)
+                {
+                    if (str[i] == '.' || str[i] == ',')
+                    {
+                        if (dotMet)
+                            return double.NaN;
+
+                        dotMet = true;
+                    }
+                    else
+                        return double.NaN;
+                }
+
+                else
+                {
+                    if (!dotMet)
+                    {
+                        res *= 10;
+                        res += digit;
+                    }
+                    else
+                    {
+                        res +=digit * Math.Pow(10, pow);
+                        pow--;
+                    }
+                }
+            }
+
+            return isNegative ? -res : res;
+            
+        }
+
+
     }
 
     
