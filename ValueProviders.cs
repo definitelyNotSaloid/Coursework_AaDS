@@ -17,10 +17,8 @@ namespace Coursework_AaDS
 
     public interface IValueProvider
     {
-        public IValueProvider Parent { get; set; }
         
-        public double GetValue();
-        public bool IsInited();           // does NOT guarantees value can be received. Only ensures args are inited
+        public double GetValue();   
     }
 
     public class Operation : IValueProvider
@@ -28,9 +26,6 @@ namespace Coursework_AaDS
         protected OperationWorker worker;
 
        
-
-       // public int ArgsBefore => worker.ArgsBefore;
-       // public int ArgsAfter => worker.ArgsAfter;
 
         private IValueProvider[] _arguments = new IValueProvider[2];
 
@@ -51,13 +46,6 @@ namespace Coursework_AaDS
         public string Syntax => worker.Syntax;
         public int Priority => worker.Priority;
 
-        public IValueProvider parent;
-
-        public IValueProvider Parent
-        {
-            get => parent;
-            set => parent = value;
-        }
 
         public double GetValue()
         {
@@ -82,25 +70,10 @@ namespace Coursework_AaDS
                 yield return Arg2;
         }
 
-        public bool IsInited()
-        {
-            switch (worker.Type)
-            {
-                case OperationType.UnaryPostfix:
-                case OperationType.UnaryPrefix:
-                    return Arg1 != null;
-
-                case OperationType.Binary:
-                    return Arg1 != null && Arg2 != null;
-
-                default:
-                    return false;
-            }
-        }
+        
 
         public Operation(OperationWorker worker)
         {
-            parent = null;
             this.worker = worker;
         }
     }
@@ -111,11 +84,7 @@ namespace Coursework_AaDS
         private string _name;
         public string Name => _name;
         public IValueProvider parent;
-        public IValueProvider Parent
-        {
-            get => parent;
-            set => parent = value;
-        }
+     
 
         public override string ToString()
         {
@@ -134,7 +103,6 @@ namespace Coursework_AaDS
 
         public double GetValue() => _value;
 
-        public bool IsInited() => true;
     }
 
 

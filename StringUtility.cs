@@ -110,6 +110,14 @@ namespace Coursework_AaDS
             }
         }
 
+        public static bool IsEmptyOrSpacesOnly(this string str)
+        {
+            for (int i = 0; i < str.Length; i++)
+                if (str[i] != ' ')
+                    return false;
+
+            return true;
+        }
     }
 
     

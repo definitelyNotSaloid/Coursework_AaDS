@@ -16,18 +16,21 @@ namespace Coursework_AaDS
             GlobalData.Init();
             
             while (true)
-            { 
+            {
+                Console.WriteLine("Enter expression:");
                 var formula = Console.ReadLine();
-                if (formula == "esc") 
+
+                if (formula == "esc")       
                     break;
+
                 try
                 {
                     IValueProvider res=null;
                     res = FormulaParser.GetRootValueProvider(formula);
 
 
-                    Console.WriteLine(res.GetValue());
-
+                    Console.WriteLine("Result: " + res.GetValue());
+                    Console.WriteLine("Polish notation:");
                     if (res is Operation operation)
                         foreach (var op in FormulaParser.ToPrefixFormat(operation))
                             Console.Write(op);
@@ -38,9 +41,6 @@ namespace Coursework_AaDS
 
 
                     Console.WriteLine();
-                    /*Console.WriteLine("Parse time = " + timeParse.ToString());
-                    Console.WriteLine("Calculation time = " + timeVal.ToString());
-                    Console.WriteLine("translating to prefix form time = " + timePrefix.ToString());*/
                 }
                 catch(FormatException ex)
                 {
@@ -51,6 +51,8 @@ namespace Coursework_AaDS
                 {
                     Console.WriteLine("runtime error: " + ex.Message);
                 }
+
+                Console.WriteLine();
             }
             
         }

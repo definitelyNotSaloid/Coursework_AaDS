@@ -10,6 +10,9 @@ namespace Coursework_AaDS
     {
         public static IValueProvider GetRootValueProvider(string formula)
         {
+            if (formula.IsEmptyOrSpacesOnly())
+                throw new FormatException("Awaited formula, but empty string received");
+
             NotAList<Operation> formulaOperations = new NotAList<Operation>();
             NotAList<IValueProvider> formulaInitedValues = new NotAList<IValueProvider>();
 
@@ -144,7 +147,7 @@ namespace Coursework_AaDS
 
                 if (highestPriorityOp.OperationType == OperationType.Binary)
                 {
-                    initedValsEnumerator++;
+                    initedValsEnumerator.MoveNext();
                     highestPriorityOp.Arg2 = (IValueProvider)initedValsEnumerator.Current;
                     formulaInitedValues.RemoveAt(initedValsEnumerator);
                 }

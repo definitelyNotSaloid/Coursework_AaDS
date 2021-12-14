@@ -10,15 +10,11 @@ namespace Coursework_AaDS
         protected OperationType type;
         protected string syntax;
         protected int priority;
-        //protected int argsBefore;
-        //protected int argsAfter;
 
 
         public OperationType Type { get => type; }
         public string Syntax { get => syntax; }
         public int Priority { get => priority; }
-        //public int ArgsBefore { get => argsBefore; }
-       // public int ArgsAfter { get => argsAfter; }
 
         public abstract double Calculate(double[] args);
         public OperationWorker(string syntax, int priority, OperationType type)
@@ -85,7 +81,7 @@ namespace Coursework_AaDS
             if (arguments[1] == 0)
                 throw new DivideByZeroException();
 
-            return arguments[0] / arguments[1];
+            return arguments[0] / arguments[1];             
         }
 
         public OperationWorker_Division(string syntax, int priority, OperationType type) : base(syntax, priority, type)
